@@ -1,0 +1,248 @@
+
+CREATE TABLE LicnciaFuncionamiento
+(
+	nroLicencia          CHAR(6) NOT NULL,
+	fechaEmision         DATETIME NOT NULL,
+	fechaVencionamiento  DATETIME NOT NULL,
+	nroDecretoAlcaldia   CHAR(6) NOT NULL,
+	actividad            VARCHAR(30) NOT NULL,
+	representanteLegal   VARCHAR(30) NOT NULL,
+	nroNegocio           CHAR(6) NULL
+);
+
+
+
+ALTER TABLE LicnciaFuncionamiento
+ADD PRIMARY KEY (nroLicencia);
+
+
+
+CREATE TABLE Negocio
+(
+	nroNegocio           CHAR(6) NOT NULL,
+	razonSocial          VARCHAR(30) NOT NULL,
+	direccion            VARCHAR(30) NOT NULL,
+	fechaRegistro        DATETIME NOT NULL,
+	capacidad            INT NOT NULL,
+	tipoAcceso           VARCHAR(30) NOT NULL,
+	nroLote              INT NOT NULL,
+	codTipoNeg           CHAR(6) NULL,
+	codPlano             CHAR(6) NULL
+);
+
+
+
+ALTER TABLE Negocio
+ADD PRIMARY KEY (nroNegocio);
+
+
+
+CREATE TABLE NegocioxPropietario
+(
+	nombresProp          VARCHAR(30) NOT NULL,
+	apellidosProp        VARCHAR(30) NOT NULL,
+	razonSocial          VARCHAR(30) NOT NULL,
+	codProp              CHAR(6) NOT NULL,
+	nroNegocio           CHAR(6) NOT NULL
+);
+
+
+
+ALTER TABLE NegocioxPropietario
+ADD PRIMARY KEY (codProp,nroNegocio);
+
+
+
+CREATE TABLE PagoImpuesto
+(
+	nroPago              CHAR(6) NOT NULL,
+	fechaPago            DATETIME NOT NULL,
+	concepto             VARCHAR(30) NOT NULL,
+	montoPago            DECIMAL(19,4) NOT NULL,
+	periodoPredial       VARCHAR(30) NOT NULL,
+	multa                DECIMAL(19,4) NOT NULL,
+	descuento            DECIMAL(19,4) NOT NULL,
+	totalPago            CHAR(18) NOT NULL,
+	codProp              CHAR(6) NULL
+);
+
+
+
+ALTER TABLE PagoImpuesto
+ADD PRIMARY KEY (nroPago);
+
+
+
+CREATE TABLE PlanoCuidad
+(
+	codPlano             CHAR(6) NOT NULL,
+	nombres              VARCHAR(30) NOT NULL,
+	zonificacion         VARCHAR(30) NOT NULL,
+	longitud             INT NOT NULL,
+	nroCuadras           INT NOT NULL,
+	codTipoPlano         CHAR(6) NULL
+);
+
+
+
+ALTER TABLE PlanoCuidad
+ADD PRIMARY KEY (codPlano);
+
+
+
+CREATE TABLE PredioaxPropietarios
+(
+	nombreProp           VARCHAR(30) NOT NULL,
+	apellidosProp        VARCHAR(30) NOT NULL,
+	porcTitularidad      INT NOT NULL,
+	nroPredio            CHAR(6) NOT NULL,
+	codProp              CHAR(6) NOT NULL
+);
+
+
+
+ALTER TABLE PredioaxPropietarios
+ADD PRIMARY KEY (nroPredio,codProp);
+
+
+
+CREATE TABLE predios
+(
+	nroPredio            CHAR(6) NOT NULL,
+	tipoPredio           VARCHAR(30) NOT NULL,
+	categorizacion       VARCHAR(30) NOT NULL,
+	pisos                INT NOT NULL,
+	fechaConstrucion     DATETIME NOT NULL,
+	fechaRegistro        DATETIME NOT NULL,
+	direccion            VARCHAR(30) NOT NULL,
+	extencion            CHAR(18) NOT NULL,
+	material             CHAR(18) NOT NULL,
+	nroRegistro          CHAR(6) NOT NULL,
+	numPredio            CHAR(6) NOT NULL,
+	codPlano             CHAR(6) NULL
+);
+
+
+
+ALTER TABLE predios
+ADD PRIMARY KEY (nroPredio);
+
+
+
+CREATE TABLE propietario
+(
+	codProp              CHAR(6) NOT NULL,
+	nombreProp           VARCHAR(30) NOT NULL,
+	apellidoProp         VARCHAR(30) NOT NULL,
+	dniProp              CHAR(8) NOT NULL,
+	telefonoRef          VARCHAR(12) NOT NULL,
+	rucProp              CHAR(11) NOT NULL,
+	edadProp             INT NOT NULL
+);
+
+
+
+ALTER TABLE propietario
+ADD PRIMARY KEY (codProp);
+
+
+
+CREATE TABLE RegistoMorosos
+(
+	nroRegMorosos        CHAR(6) NOT NULL,
+	fechaRegistro        DATETIME NOT NULL,
+	motivoMorosidad      VARCHAR(30) NOT NULL,
+	montodeuda           DECIMAL(19,4) NOT NULL,
+	Situacion            CHAR(18) NOT NULL,
+	periodoAdeudado      CHAR(18) NOT NULL,
+	codProp              CHAR(6) NULL
+);
+
+
+
+ALTER TABLE RegistoMorosos
+ADD PRIMARY KEY (nroRegMorosos);
+
+
+
+CREATE TABLE TipoNegocio
+(
+	codTipoNeg           CHAR(6) NOT NULL,
+	denominacion         VARCHAR(30) NOT NULL,
+	rubroGeneral         VARCHAR(30) NOT NULL,
+	porcImpuesto         INT NOT NULL
+);
+
+
+
+ALTER TABLE TipoNegocio
+ADD PRIMARY KEY (codTipoNeg);
+
+
+
+CREATE TABLE TipoPlanos
+(
+	codTipoPlano         CHAR(6) NOT NULL,
+	denomainacionPlano   VARCHAR(30) NOT NULL
+);
+
+
+
+ALTER TABLE TipoPlanos
+ADD PRIMARY KEY (codTipoPlano);
+
+
+
+ALTER TABLE LicnciaFuncionamiento
+ADD FOREIGN KEY R_91 (nroNegocio) REFERENCES Negocio (nroNegocio);
+
+
+
+ALTER TABLE Negocio
+ADD FOREIGN KEY R_93 (codTipoNeg) REFERENCES TipoNegocio (codTipoNeg);
+
+
+
+ALTER TABLE Negocio
+ADD FOREIGN KEY R_99 (codPlano) REFERENCES PlanoCuidad (codPlano);
+
+
+
+ALTER TABLE NegocioxPropietario
+ADD FOREIGN KEY R_94 (codProp) REFERENCES propietario (codProp);
+
+
+
+ALTER TABLE NegocioxPropietario
+ADD FOREIGN KEY R_98 (nroNegocio) REFERENCES Negocio (nroNegocio);
+
+
+
+ALTER TABLE PagoImpuesto
+ADD FOREIGN KEY R_89 (codProp) REFERENCES propietario (codProp);
+
+
+
+ALTER TABLE PlanoCuidad
+ADD FOREIGN KEY R_86 (codTipoPlano) REFERENCES TipoPlanos (codTipoPlano);
+
+
+
+ALTER TABLE PredioaxPropietarios
+ADD FOREIGN KEY R_95 (nroPredio) REFERENCES predios (nroPredio);
+
+
+
+ALTER TABLE PredioaxPropietarios
+ADD FOREIGN KEY R_96 (codProp) REFERENCES propietario (codProp);
+
+
+
+ALTER TABLE predios
+ADD FOREIGN KEY R_87 (codPlano) REFERENCES PlanoCuidad (codPlano);
+
+
+
+ALTER TABLE RegistoMorosos
+ADD FOREIGN KEY R_90 (codProp) REFERENCES propietario (codProp);
+
